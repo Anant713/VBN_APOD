@@ -1,15 +1,13 @@
-#include "../../include/vbn/FeatureDetector.hpp"
+//#include "../../include/vbn/FeatureDetector.hpp"
 #include <math.h>
+#include "Structs.hpp"
 
-void three_led(FeatureFrame &frame){
+void three_led(FeatureFrame *camframe, float Df, float y_m, float z_m , PoseResult& pose){
 
 }
-// Structure to hold pose data (6 elements: a, b, c, x, y, z)
-struct PoseResult{
-    float data[6];
-} ;
 
-PoseResult five_led(FeatureFrame *camframe, float Df, float y_m, float z_m , PoseResult& pose) {
+
+void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m , PoseResult& pose) {
     // y_m = y_max/tan(Az_max)
     
     // Initializing LEDS vectors in target frame with scaling
@@ -22,11 +20,11 @@ PoseResult five_led(FeatureFrame *camframe, float Df, float y_m, float z_m , Pos
     // Initializing LEDS vectors in chaser frame with scaling
     float s1 = 1.0f;
     float s2 = 1.0f;
-    float x_1_nc[3] = { s1, camframe->p1y, camframe->p1z };
-    float x_2_nc[3] = { s1, camframe->p2y, camframe->p2z };
-    float x_3_nc[3] = { s1, camframe->p3y, camframe->p3z };
-    float x_4_nc[3] = { s1, camframe->p4y, camframe->p4z };
-    float x_5_nc[3] = { s1, camframe->p5y, camframe->p5z };
+    float x_1_nc[3] = { s1, camframe->points[0].y, camframe->points[1].z };
+    float x_2_nc[3] = { s1, camframe->points[1].y, camframe->points[1].z };
+    float x_3_nc[3] = { s1, camframe->points[2].y, camframe->points[1].z };
+    float x_4_nc[3] = { s1, camframe->points[3].y, camframe->points[1].z };
+    float x_5_nc[3] = { s1, camframe->points[4].y, camframe->points[1].z };
     
     // Calculating centre by taking mean
     float xc[3] = { 0.0f, 0.0f, 0.0f };
@@ -91,5 +89,5 @@ PoseResult five_led(FeatureFrame *camframe, float Df, float y_m, float z_m , Pos
     pose.data[4] = R * sinf(Az) * cos_El;
     pose.data[5] = -R * sinf(El);
     
-    return pose;
+    return;
 }
