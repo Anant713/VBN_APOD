@@ -1,7 +1,6 @@
-#include "../../include/vbn/FeatureDetector.hpp"
-#include <stdlib.h>
-
-int THRESHOLD = 150 ;
+//#include "../../include/vbn/FeatureDetector.hpp"
+#include "Structs.hpp"
+using std::vector ;
 
 // Structure to maintain a contour
 typedef struct {
@@ -10,45 +9,25 @@ typedef struct {
     double num_points;
 } Contour;
 
-FeatureDetector::FeatureDetector(IFeatureExtractor* extractor)
-    : extractor_(extractor) {}
-
 
 // Global variables (minimize these for better practice)
 
-uint8_t* threshold(uint8_t* image,int SIZE){
-    uint8_t* binary_img = (uint8_t*)malloc(SIZE * sizeof(uint8_t));
-    // if (!binary_img) {
-    //     perror("malloc faiFeaturePoint2D");
-    //     return NULL;
-    // }
-    //Converting to binary
+void threshold(uint8_t* image,int SIZE,int THRESHOLD){
     for (size_t i=0 ; i < SIZE; i++) {
         if (image[i] < THRESHOLD){
-            binary_img[i] = 0;
+            image[i] = 0;
         } 
-        else binary_img[i]=255;
+        else image[i]=255;
     }
-    return binary_img;
-
 }
-void process_image(uint8_t *img_grey, int width, int height,FeatureFrame* leds) {
+void process_image(uint8_t *img_grey, int width, int height,FeatureFrame* leds, int THRESHOLD) {
     // Reset star count
     int contour_count = 0;
     int SIZE = width * height ;
-    // Allocate memory for thresholded image
-    uint8_t *thresh_img = threshold(img_grey,SIZE);
-    // if(thresh_img == NULL) {
-    //     printf("Memory allocation faiFeaturePoint2D for threshold image\n");
-    //     return;
-    // }
-
-    // Allocate contours
+    threshold(img_grey,SIZE, THRESHOLD);
     std:vector<Contour> contours;
-    
     // Find contours in the thresholded image
-    int num_contours = find_contours(thresh_img, width, height, contours);
-    free(thresh_img);
+    int num_contours = find_contours(img_grey, width, height, contours);
 
     for (int i = 0; i < num_contours; i++) { 
         // Calculate moments
@@ -154,26 +133,25 @@ void calculate_moments(Contour *contour, double *moments) {// Calculate moments 
         
     }
 }
-void extract_leds(FeatureFrame* leds){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
-    
+int extract_leds(FeatureFrame* leds){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
+    return 5 ;
 }
-bool FeatureDetector::detect(const ImageFrame& img, FeatureFrame& features) {
+int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
     // Your core logic here — NO OpenCV, NO hardware specifics
     // Work on input.data, input.width, etc.
 
     // Only implement if there exists some platform-independent logic 
     // otherwise better to implement in platrform-specific code
     FeatureFrame* leds  = &features;
-    uint8_t *img_grey = img.data ;
-    process_image(img_grey,img.width,img.height,leds);
-    extract_leds(leds);
+    uint8_t *img_grey = img.data.data() ;
+    process_image(img_grey,img.width,img.height,leds,THRESHOLD);
+    return extract_leds(leds);
      /* For example:
         Filtering out low-response keypoints
         Sorting by strength
         Packaging metadata (e.g., timestamp, source ID) */
      
     // return true;
-    return extractor_->extract(img, features);
 }
 
 
