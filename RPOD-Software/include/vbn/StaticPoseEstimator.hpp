@@ -1,6 +1,6 @@
 #pragma once
-#include "types/FeatureFrame.hpp"
-#include "types/PoseEstimate.hpp"
+#include "../types/FeatureFrame.hpp"
+#include "../types/PoseEstimate.hpp"
 
 class StaticPoseEstimator {
 public:

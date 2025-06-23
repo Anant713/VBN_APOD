@@ -14,3 +14,9 @@ public:
 private:
     IFeatureExtractor* extractor_;
 };
+
+int detect(ImageFrame& img, FeatureFrame& features, int THRESHOLD);
+void best_comb_five(FeatureFrame* leds);
+void best_comb_three(FeatureFrame* leds);
+void arrange(FeatureFrame* leds);
+void exchange(int idx , int n , FeatureFrame* leds);

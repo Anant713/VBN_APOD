@@ -12,6 +12,13 @@ typedef struct {
 
 // Global variables (minimize these for better practice)
 
+void best_comb_three(FeatureFrame* leds){
+
+}
+void best_comb_five(FeatureFrame* leds){
+
+}
+
 void threshold(uint8_t* ptr,int SIZE,int THRESHOLD){
     for (size_t i=0 ; i < SIZE; i++) {
         if (ptr[i] < THRESHOLD){

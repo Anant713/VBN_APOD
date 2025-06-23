@@ -2,15 +2,6 @@
 #include <math.h>
 #include "Structs.hpp"
 
-void exchange(float (&x_r1)[3] , float (&x_r5)[3]){
-    for (int i=0;i<3;i++){
-        float temp = x_r1[i];
-        x_r1[i] = x_r5[i] ;
-        x_r5[i] = temp ;
-    }
-    return ;
-}
-
 void three_led(FeatureFrame *camframe, float D1 ,float D2, float f, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose){
     // Initializing LEDS vectors in target frame with scaling
     float x_1_nt[3] = { 0.0f, -D1, 0.0f };

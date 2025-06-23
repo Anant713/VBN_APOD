@@ -1,11 +1,8 @@
 #pragma once
 #include "math.h"
-#include <array>
 #include <vector>
 #include <cstdint>
-#include <stdlib.h>
 #include <array>
-
 #include "iostream"
 using std::cout;
 using std::endl;
