@@ -1,11 +1,17 @@
 #pragma once
 #include <vector>
 #include <cstdint>
-
+#include "iostream" // using to debug , will remove later
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
 /// \brief A 2D feature point (e.g., marker, LED blob, corner).
 struct FeaturePoint2D {
-    float x;  ///< Pixel x-coordinate
-    float y;  ///< Pixel y-coordinate
+    float y;  ///< Pixel x-coordinate
+    float z;  ///< Pixel y-coordinate
+    FeaturePoint2D () : y(0.0f) , z(0.0f) {};
+    FeaturePoint2D (float y_coord ,float z_coord) : y(y_coord) , z(z_coord) {printf("not default ran");};
+
 };
 
 /// \brief Represents a set of detected 2D features in an image.

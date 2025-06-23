@@ -1,7 +1,7 @@
 #pragma once
 
-#include "types/ImageFrame.hpp"
-#include "types/FeatureFrame.hpp"
+#include "../types/ImageFrame.hpp"
+#include "../types/FeatureFrame.hpp"
 
 class IFeatureExtractor {
 public:
