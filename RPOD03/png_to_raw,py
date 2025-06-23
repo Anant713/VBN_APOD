@@ -1,0 +1,11 @@
+from PIL import Image
+import numpy as np
+
+# Load PNG image
+img = Image.open('/home/anant/VBN/simulated-image.png')
+img_array = np.array(img)
+
+# Save as true raw binary
+with open('./simulated-image.raw', 'wb') as f:
+    f.write(img_array.tobytes())
+print (img_array.shape)
