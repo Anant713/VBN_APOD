@@ -116,6 +116,7 @@ def compute_navigation_solution(led_coords, Df, ymax, zmax, Az_max, El_max):
         R_mag * np.sin(Az) * np.cos(El),
         -R_mag * np.sin(El)
     ])
+    
 
     # Step 12: Convert to nav frame (Eq 4.32)
     s_nc_n = -R.T @ s_nc_nc

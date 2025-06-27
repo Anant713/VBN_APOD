@@ -113,10 +113,10 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
 
     for(int i=0;i<3;i++){
         printf("x_r1[%d]= %f ",i,x_r1[i]);
-        printf("x_r2[%d]= %f",i,x_r1[i]);
-        printf("x_r3[%d]= %f",i,x_r1[i]);
-        printf("x_r4[%d]= %f",i,x_r1[i]);
-        printf("x_r5[%d]= %f\n",i,x_r1[i]);
+        printf("x_r2[%d]= %f",i,x_r2[i]);
+        printf("x_r3[%d]= %f",i,x_r3[i]);
+        printf("x_r4[%d]= %f",i,x_r4[i]);
+        printf("x_r5[%d]= %f\n",i,x_r5[i]);
     }
 
     float a = 0.0f, b = 0.0f, c = 0.0f;
@@ -131,6 +131,8 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     printf("Az = %f \n El =%f \n",Az,El);
     float cos_Az = cosf(Az);
     float cos_El = cosf(El);
+    float sin_Az = sinf(Az);
+    float sin_El = sinf(El);
     
     // Calculate angles using atan2
     a = atan2f(x_r1[2], x_r2[2]);
@@ -149,9 +151,12 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     pose.data[0] = a;
     pose.data[1] = b;
     pose.data[2] = c;
-    pose.data[3] = R * cos_Az * cos_El;
-    pose.data[4] = R * sinf(Az) * cos_El;
-    pose.data[5] = -R * sinf(El);
+    pose.data[3] = Az;
+    pose.data[4] = El;
+    pose.data[5] = R;
+    pose.s_ntnc_nc[0] = R*cos_Az*cos_El;
+    pose.s_ntnc_nc[0] = R*sin_Az*cos_El;
+    pose.s_ntnc_nc[0] = -R * sin_El;
     
     return;
 }

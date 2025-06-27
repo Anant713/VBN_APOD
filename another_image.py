@@ -33,7 +33,7 @@ camera_matrix = np.array([
 # Define camera rotation (Euler angles: roll, pitch, yaw in degrees)
 theta_x, theta_y, theta_z = np.radians([30, 0, 0])  # Rotation in X, Y, Z (in degrees)
 rotation_vector, _ = cv2.Rodrigues(np.array([theta_x, theta_y, theta_z]))  # Convert to rotation vector
-
+print(rotation_vector)
 # Define camera translation (moving camera in mm)
 translation_vector = np.array([[0], [0], [50]], dtype=np.float32)  # Shift right & down
 

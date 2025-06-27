@@ -191,7 +191,7 @@ void extract_leds(FeatureFrame* leds){//If number of detected contours > no.of L
     else best_comb_five(leds);
 }
 
-int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
+int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD,float ) {
     // Your core logic here — NO OpenCV, NO hardware specifics
     // Work on input.data, input.width, etc.
     // Only implement if there exists some platform-independent logic 

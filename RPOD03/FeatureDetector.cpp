@@ -9,22 +9,22 @@ typedef struct {
     double num_points;
 } Contour;
 
-
 // Global variables (minimize these for better practice)
 
 void best_comb_three(FeatureFrame* leds){
 
 }
+
 void best_comb_five(FeatureFrame* leds){
 
 }
 
-void threshold(uint8_t* ptr,int SIZE,int THRESHOLD){
+void threshold(ImageFrame& img,int SIZE,int THRESHOLD){
     for (size_t i=0 ; i < SIZE; i++) {
-        if (ptr[i] < THRESHOLD){
-            ptr[i] = 0;
+        if (img.data[i] < THRESHOLD){
+            img.binary[i] = 0;
         } 
-        else ptr[i]=255;
+        else img.binary[i]=1;
     }
 }
 
@@ -42,7 +42,7 @@ int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contour
         for (int x = 10; x < width - 11; x=x+10) {
             int idx = y * width + x;
             // If pixel is white and not visited
-            if (img.data[idx] == 255 && !visited[idx]) {  // Found a new contour
+            if (img.binary[idx] == 1 && !visited[idx]) {  // Found a new contour
 
                 // contours[contour_count].allocated_size = CONTOUR_BUFFER_SIZE;
                 contours.emplace_back();//as push_back needs an argument to compile
@@ -78,7 +78,7 @@ int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contour
                         
                         if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
                             int nidx = ny * width + nx;
-                            if (img.data[nidx] == 255 && !visited[nidx]){
+                            if (img.binary[nidx] == 1 && !visited[nidx]){
                                 stack_x.push_back(nx);
                                 stack_y.push_back(ny);
                                 stack_size++;
@@ -109,7 +109,7 @@ int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contour
     return contour_count;
 }
 
-void calculate_moments(Contour *contour, float *moments) {// Calculate moments for a contour
+void calculate_moments(Contour *contour, float *moments , ImageFrame& img) {// Calculate moments for a contour
     // Initialize moments
     for (int i = 0; i < 3; i++) {
         moments[i] = 0.0;
@@ -117,9 +117,10 @@ void calculate_moments(Contour *contour, float *moments) {// Calculate moments f
     moments[0] = contour->num_points;
     // Calculate spatial moments
     for (int i = 0; i < contour->num_points; i++) {
-        // M10, M01 - first order moments        
-        moments[1] += contour->points_x[i];
-        moments[2] += contour->points_y[i];
+        // M10, M01 - first order moments   
+        float brightness = (img.data[contour->points_y[i]*img.width + contour->points_x[i]])/255.0 ;     
+        moments[1] += contour->points_x[i] ;//* brightness;
+        moments[2] += contour->points_y[i] ;//* brightness;
         
     }
 }
@@ -130,17 +131,18 @@ void process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
     int height = img.height;
     int contour_count = 0;
     int SIZE = width * height ;
-    threshold(img.data.data(),SIZE, THRESHOLD);
+    std::vector<Contour> contours;
+    ImageFrame thresh_img;
+    threshold(img,SIZE, THRESHOLD);
     printf("thresholded , %zu\n",img.data.size());
     fflush(stdout);
-    std:vector<Contour> contours;
     // Find contours in the thresholded image
     int num_contours = find_contours(img, width, height, contours);
     printf("\n%d hi\n%zu\n",num_contours, contours.size());
     for (int i = 0; i < num_contours; i++) { 
         // Calculate moments
         float M[3] = {0}; // M00, M01, M10, M11, M20, M02, etc.
-        calculate_moments(&contours[i], M);
+        calculate_moments(&contours[i], M,img);
         if (M[0] > 0) { // M[0] is M00
             // Calculate center of mass
             double cx = M[1] / M[0]; // M10/M00

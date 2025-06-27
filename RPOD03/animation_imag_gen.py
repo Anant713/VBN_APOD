@@ -43,7 +43,7 @@ def generate_frame(i):
 
     # Convert Euler angles to a rotation vector
     R_vec, _ = cv2.Rodrigues(np.array([theta_x, theta_y, theta_z]))
-
+    #print(R_vec)
     # Create blank image
     image = np.full((img_height, img_width), background_color, dtype=np.uint8)
 
