@@ -67,14 +67,14 @@ void three_led(FeatureFrame *camframe, float D1 ,float D2, float f, float y_m, f
     return;
 }
 
-void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose) {
+void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float tan_Az_m,float tan_El_m, PoseResult& pose) {
 
     // Initializing LEDS vectors in target frame with scaling
-    float x_1_nt[3] = { 0.0f, Df, 0.0f };
-    float x_2_nt[3] = { 0.0f, 0.0f, Df };
-    float x_3_nt[3] = { 0.0f, -Df, 0.0f };
-    float x_4_nt[3] = { 0.0f, 0.0f, -Df };
-    float x_5_nt[3] = { -Df, 0.0f, 0.0f };
+    // float x_1_nt[3] = { 0.0f, Df, 0.0f };
+    // float x_2_nt[3] = { 0.0f, 0.0f, Df };
+    // float x_3_nt[3] = { 0.0f, -Df, 0.0f };
+    // float x_4_nt[3] = { 0.0f, 0.0f, -Df };
+    // float x_5_nt[3] = { -Df, 0.0f, 0.0f };
     
     // Initializing LEDS vectors in chaser frame with scaling
     float s1 = 1.0f;
@@ -92,7 +92,7 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     float xc[3] = { 0.0f, 0.0f, 0.0f };
     
     // Add all vectors
-    for(int i = 0; (i < 4); i++) {
+    for(int i = 0; (i < 3); i++) {
         xc[i] = x_1_nc[i] + x_2_nc[i] + x_3_nc[i] + x_4_nc[i];
     }
     
@@ -123,8 +123,8 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     float a = 0.0f, b = 0.0f, c = 0.0f;
     float tan_Az = 0.0f, tan_El = 0.0f, Az = 0.0f, El = 0.0f;
     
-    tan_Az = (xc[1] / y_m)* tanf(Az_m);
-    tan_El = (xc[2] / z_m)* tanf(El_m);
+    tan_Az = (xc[1] / y_m)* tan_Az_m;
+    tan_El = (xc[2] / z_m)* tan_El_m;
     Az = atanf(tan_Az);
     El = atanf(tan_El);
     //printf("Az_m = %f \n El_m =%f \n",Az_m*180/M_PI,El_m*180/M_PI); 
@@ -132,7 +132,9 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     printf("Az = %f \n El =%f \n",Az,El);
     float cos_Az = cosf(Az);
     float cos_El = cosf(El);
-    
+    float sin_Az = sinf(Az);
+    float sin_El = sinf(El);
+       
     // Calculate angles using atan2
     a = atan2f(x_r1[2], x_r2[2]);
     float cos_a = cosf(a);
@@ -150,9 +152,12 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     pose.data[0] = a;
     pose.data[1] = b;
     pose.data[2] = c;
-    pose.data[3] = R * cos_Az * cos_El;
-    pose.data[4] = R * sinf(Az) * cos_El;
-    pose.data[5] = -R * sinf(El);
+    pose.data[3] = Az;
+    pose.data[4] = El;
+    pose.data[5] = R;
+    pose.s_ntnc_nc[0] = R*cos_Az*cos_El;
+    pose.s_ntnc_nc[0] = R*sin_Az*cos_El;
+    pose.s_ntnc_nc[0] = -R * sin_El;
     
     return;
 }
