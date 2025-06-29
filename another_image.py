@@ -23,6 +23,10 @@ markers_3D = np.array([
 
 # Define camera intrinsic matrix (assuming focal length in pixels)
 focal_length = 2590  # Pixels (adjust if needed)
+# mx = 1000/1.12 # no. of pixels/mm in x direction
+# my = 1000/1.12 # no. of pixels/mm in y direction
+# fx = mx * focal_length
+# fy = my * focal_length
 image_center = (img_width // 2, img_height // 2)
 camera_matrix = np.array([
     [focal_length, 0, image_center[0]],

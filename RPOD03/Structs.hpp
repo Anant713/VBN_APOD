@@ -58,7 +58,7 @@ struct FeatureFrame {
     uint32_t frame_id = 0;              ///< Optional sequential frame ID
 };
 
-void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
+void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
 void three_led(FeatureFrame *camframe, float D1 ,float D2, float focal, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
 int detect(ImageFrame& img, FeatureFrame& features, int THRESHOLD);
 void best_comb_five(FeatureFrame* leds);

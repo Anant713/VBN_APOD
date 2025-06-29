@@ -67,14 +67,14 @@ void three_led(FeatureFrame *camframe, float D1 ,float D2, float f, float y_m, f
     return;
 }
 
-void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose) {
+void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float tan_Az_m,float tan_El_m, PoseResult& pose) {
 
     // Initializing LEDS vectors in target frame with scaling
-    float x_1_nt[3] = { 0.0f, Df, 0.0f };
-    float x_2_nt[3] = { 0.0f, 0.0f, Df };
-    float x_3_nt[3] = { 0.0f, -Df, 0.0f };
-    float x_4_nt[3] = { 0.0f, 0.0f, -Df };
-    float x_5_nt[3] = { -Df, 0.0f, 0.0f };
+    // float x_1_nt[3] = { 0.0f, Df, 0.0f };
+    // float x_2_nt[3] = { 0.0f, 0.0f, Df };
+    // float x_3_nt[3] = { 0.0f, -Df, 0.0f };
+    // float x_4_nt[3] = { 0.0f, 0.0f, -Df };
+    // float x_5_nt[3] = { -Df, 0.0f, 0.0f };
     
     // Initializing LEDS vectors in chaser frame with scaling
     float s1 = 1.0f;
@@ -92,7 +92,7 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     float xc[3] = { 0.0f, 0.0f, 0.0f };
     
     // Add all vectors
-    for(int i = 0; (i < 4); i++) {
+    for(int i = 0; (i < 3); i++) {
         xc[i] = x_1_nc[i] + x_2_nc[i] + x_3_nc[i] + x_4_nc[i];
     }
     
@@ -123,8 +123,8 @@ void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m
     float a = 0.0f, b = 0.0f, c = 0.0f;
     float tan_Az = 0.0f, tan_El = 0.0f, Az = 0.0f, El = 0.0f;
     
-    tan_Az = (xc[1] / y_m)* tanf(Az_m);
-    tan_El = (xc[2] / z_m)* tanf(El_m);
+    tan_Az = (xc[1] / y_m)* tan_Az_m;
+    tan_El = (xc[2] / z_m)* tan_El_m;
     Az = atanf(tan_Az);
     El = atanf(tan_El);
     //printf("Az_m = %f \n El_m =%f \n",Az_m*180/M_PI,El_m*180/M_PI); 

@@ -133,13 +133,13 @@ def compute_navigation_solution(led_coords, Df, ymax, zmax, Az_max, El_max):
 
 # Dummy input (to be replaced with actual values)
 led_tuples = [(0.0, 1205.0, 0.0), (0.0, 0.0, 1205.0), (0.0, -1205.0, 0.0), (0.0, 0.0, -1205.0), (0.0, 0.0, 0.0)]
-led_tuples = extract_marker_centroids("/home/anant/VBN/RPOD03/simulated-image.png")
+led_tuples = extract_marker_centroids("/home/anant/VBN/RPOD03/projected_markers.png")
 print("hello")
-Az_max = np.radians(60)
-El_max = np.radians(45)
-y_max = 0.2
-z_max = 0.2
-Df = 0.05
+# Az_max = np.radians(60)
+# El_max = np.radians(45)
+# y_max = 0.2
+# z_max = 0.2
+# Df = 0.05
 
-pose = compute_navigation_solution(led_tuples, Df, y_max, z_max, Az_max, El_max)
-print(pose)
+# pose = compute_navigation_solution(led_tuples, Df, y_max, z_max, Az_max, El_max)
+# print(pose)
