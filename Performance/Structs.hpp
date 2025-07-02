@@ -1,4 +1,8 @@
 #pragma once
+
+#include <chrono> 
+using std::chrono::system_clock;
+
 #include "math.h"
 #include <vector>
 #include <cstdint>

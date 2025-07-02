@@ -16,7 +16,7 @@ for i in range (len(roll)):
                     # for n in range (len(Z)):
                         print(f"Roll: {roll[i]}, Pitch: {pitch[j]}, Yaw: {yaw[k]}, X: {X[l]}, Y: 0, Z: 0")
                         row = [roll[i], pitch[j], yaw[k], 0, 0, X[l]]
-                        with open('/home/anant/VBN/Performance/close_range_5led.csv', 'a', newline='') as f:
-                            csv.writer(f).writerow(row)  
+                        # with open('/home/anant/VBN/Performance/close_range_5led.csv', 'a', newline='') as f:
+                        #     csv.writer(f).writerow(row)  
                         another_image.make_image( pitch[j], yaw[k],roll[i],0, 0,X[l])
                         subprocess.run("./pipeline", shell=True)

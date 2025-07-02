@@ -160,11 +160,11 @@ void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m
     pose.s_ntnc_nc[1] = R*sin_Az*cos_El;
     pose.s_ntnc_nc[2] = -R * sin_El;
 
-    std::ofstream out("/home/anant/VBN/Performance/close_range_5led.csv", std::ios::app);
-    if (!out) {
-        std::cerr << "Could not open close_range_5led.csv\n";
-    }
-    out <<pose.data[0]*180/M_PI<<","<<pose.data[1]*180/M_PI<<","<<pose.data[2]*180/M_PI<<","<<pose.s_ntnc_nc[1]<<","<<pose.s_ntnc_nc[2]<<","<<pose.s_ntnc_nc[0] <<endl<<endl;
-    out.close();
+    // std::ofstream out("/home/anant/VBN/Performance/close_range_5led.csv", std::ios::app);
+    // if (!out) {
+    //     std::cerr << "Could not open close_range_5led.csv\n";
+    // }
+    // out <<pose.data[0]*180/M_PI<<","<<pose.data[1]*180/M_PI<<","<<pose.data[2]*180/M_PI<<","<<pose.s_ntnc_nc[1]<<","<<pose.s_ntnc_nc[2]<<","<<pose.s_ntnc_nc[0] <<endl<<endl;
+    // out.close();
     return;
 }
