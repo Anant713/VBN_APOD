@@ -4,30 +4,37 @@
 #include <fstream>
 void three_led(FeatureFrame *camframe, float D1 ,float D2, float f, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose){
     // Initializing LEDS vectors in target frame with scaling
-    float x_1_nt[3] = { 0.0f, -D1, 0.0f };
-    float x_2_nt[3] = { 0.0f, 0.0f, -D1 };
-    float x_5_nt[3] = { -D2, 0.0f, 0.0f };
+    // float x_1_nt[3] = { 0.0f, -D1, 0.0f };
+    // float x_2_nt[3] = { 0.0f, 0.0f, -D1 };
+    // float x_5_nt[3] = { -D2, 0.0f, 0.0f };
     
     // Initializing LEDS vectors in chaser frame with scaling
     float s1 = 1.0f;
     float s2 = 1.0f;
+    for (int i=0;i<3;i++){
+        printf("x_%d_nc[3]- %f %f \n",i+1,camframe->points[i].y, camframe->points[i].z);
+    }
     float x_1_nc[3] = { s1, camframe->points[0].y, camframe->points[0].z };
     float x_2_nc[3] = { s1, camframe->points[1].y, camframe->points[1].z };
+    float x_3_nc[3] = { s1, camframe->points[2].y, camframe->points[2].z };
+    float x_4_nc[3] = { s1, camframe->points[3].y, camframe->points[3].z };
     float x_5_nc[3] = { s1, camframe->points[4].y, camframe->points[4].z };
     
     // Calculating centre by taking mean
     float xc[3] = { 0.0f, 0.0f, 0.0f };
     
     // Add all vectors
-    xc[1] = x_2_nc[1] ;
-    xc[2] = x_1_nc[2] ;
-    
+    xc[1] = x_1_nc[1] + x_2_nc[1] + x_3_nc[1] + x_4_nc[1] + x_5_nc[1];
+    xc[2] = x_1_nc[2] + x_2_nc[2] + x_3_nc[2] + x_4_nc[2] + x_5_nc[2];
+
     // Calculate relative positions (subtract center)
     float x_r1[3], x_r2[3], x_r3[3], x_r4[3], x_r5[3];
-    
+
     for(int i = 0; i < 3; i++) {
         x_r1[i] = x_1_nc[i] - xc[i];
         x_r2[i] = x_2_nc[i] - xc[i];
+        x_r3[i] = x_3_nc[i] - xc[i];
+        x_r4[i] = x_4_nc[i] - xc[i];
         x_r5[i] = x_5_nc[i] - xc[i];
     }
     
@@ -124,7 +131,7 @@ void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m
     
     tan_Az = (xc[1] /focal);
     Az = atanf(tan_Az);
-    tan_El = -(xc[2] / focal);///cosf(Az)));
+    tan_El = -(xc[2] / focal);//cosf(Az)));
     printf("\n tan_Az = %f\n tan_El = %f",tan_Az,tan_El);
     El = atanf(tan_El);
     //printf("Az_m = %f \n El_m =%f \n",Az_m*180/M_PI,El_m*180/M_PI); 
@@ -164,7 +171,7 @@ void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m
     if (!out) {
         std::cerr << "Could not open log.txt\n";
     }
-    out << "Output "<<pose.data[0]*180/M_PI<<" "<<pose.data[1]*180/M_PI<<" "<<pose.data[2]*180/M_PI<<" "<<pose.s_ntnc_nc[0]<<" "<<pose.s_ntnc_nc[1]<<" "<<pose.s_ntnc_nc[2] <<endl;
+    out << "Output "<<pose.data[0]*180/M_PI<<" "<<pose.data[1]*180/M_PI<<" "<<pose.data[2]*180/M_PI<<" "<<pose.s_ntnc_nc[1]<<" "<<pose.s_ntnc_nc[2]<<" "<<pose.s_ntnc_nc[0] <<endl;
     out.close();
     return;
 }

@@ -11,6 +11,12 @@ typedef struct {
 
 // Global variables (minimize these for better practice)
 
+float dist(const FeaturePoint2D& p1, const FeaturePoint2D& p2) {
+    float dx = p1.y - p2.y;
+    float dy = p1.z - p2.z;
+    return sqrtf(dx * dx + dy * dy);
+}
+
 void best_comb_three(FeatureFrame* leds){
 
 }
@@ -22,7 +28,7 @@ void best_comb_five(FeatureFrame* leds){
 void threshold(ImageFrame& img,int SIZE,int THRESHOLD){
     int count=0;
     for (size_t i=0 ; i < SIZE; i++) {
-        if (img.data[i] < THRESHOLD){
+        if (img.data[i] < (THRESHOLD)){
             img.binary[i] = 0;
         } 
         else {
@@ -93,8 +99,8 @@ int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contour
                         }
                     }
                 }
-                if(contours[contour_count].num_points <= 5){
-                    printf("Less than 3 ran\n");
+                if(contours[contour_count].num_points <= 80){
+                    printf("waste contour = %d",contours[contour_count].num_points );
                     contours.pop_back(); // Remove small contours
                 }
                 
@@ -229,8 +235,33 @@ void mergeCloseLEDs(FeatureFrame* leds, float threshold){
     leds->points = std::move(merged);
 }
 
+void arrange_3(FeatureFrame* leds){
+        if (leds->points.size() != 3) return;          // need exactly three blobs
 
-void arrange(FeatureFrame* leds){
+    // pairwise distances
+    const float d01 = dist(leds->points[0], leds->points[1]);
+    const float d02 = dist(leds->points[0], leds->points[2]);
+    const float d12 = dist(leds->points[1], leds->points[2]);
+
+    // total distance of each point to the other two
+    const float sum0 = d01 + d02;
+    const float sum1 = d01 + d12;
+    const float sum2 = d02 + d12;
+
+    // 1) the “up” LED is the one **closest to the other two** ⇒ smallest total
+    std::size_t centralIdx =
+        (sum0 < sum1 && sum0 < sum2) ? 0 :
+        (sum1 < sum2)               ? 1 : 2;
+
+    if (centralIdx != 2) exchange(centralIdx, 2, leds);   // move “up” to slot 2
+
+    // 2) of the remaining two, the one with the smaller x is “left”
+    if (leds->points[0].y > leds->points[1].y)
+        exchange(1, 0 , leds);
+
+}
+
+void arrange_5(FeatureFrame* leds){
     int maxy=0,maxz=1,miny=2,minz =3;
     for(int i=0;i<5;i++){
         if (leds->points[maxy].y < leds->points[i].y) maxy = i;
@@ -252,12 +283,17 @@ void arrange(FeatureFrame* leds){
 }
 
 void extract_leds(FeatureFrame* leds){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
-    mergeCloseLEDs(leds, 5);
+    mergeCloseLEDs(leds, 8);
     if(leds->points.size()==5){
-        arrange(leds); 
-        return;}
+        arrange_5(leds); 
+        return;
+    }
+    if(leds->points.size()==3){
+        arrange_3(leds); 
+        return;
+    }
     else best_comb_five(leds);
-    arrange(leds);
+    arrange_5(leds);
 }
 
 int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
@@ -268,6 +304,9 @@ int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
     FeatureFrame* leds  = &features;
     uint8_t *img_grey = img.data.data() ;
     process_image(img,leds,THRESHOLD);
+    for(int i=0;i<leds->points.size();i++){
+        printf("%i : x = %f, y = %f\n",i+1,features.points[i].y,features.points[i].z);
+    }
     extract_leds(leds);
     printf("\n%zu\n",leds->points.size());
     return leds->points.size();
