@@ -1,0 +1,89 @@
+Image read : 46 ms Features Detected3665 ms Pose_Estimation : 4 ms
+Image read : 48 ms Features Detected3535 ms Pose_Estimation : 0 ms
+Image read : 49 ms Features Detected3520 ms Pose_Estimation : 4 ms
+Image read : 50 ms Features Detected3504 ms Pose_Estimation : 4 ms
+Image read : 48 ms Features Detected3524 ms Pose_Estimation : 4 ms
+Image read : 50 ms Features Detected3506 ms Pose_Estimation : 7 ms
+Image read : 49 ms Features Detected3522 ms Pose_Estimation : 4 ms
+Image read : 48 ms Features Detected3514 ms Pose_Estimation : 4 ms
+Image read : 49 ms Features Detected3530 ms Pose_Estimation : 3 ms
+Image read : 43 ms Features Detected3523 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3508 ms Pose_Estimation : 7 ms
+Image read : 43 ms Features Detected3518 ms Pose_Estimation : 4 ms
+Image read : 42 ms Features Detected3504 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3537 ms Pose_Estimation : 1 ms
+Image read : 43 ms Features Detected3525 ms Pose_Estimation : 7 ms
+Image read : 44 ms Features Detected3551 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3523 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3545 ms Pose_Estimation : 5 ms
+Image read : 43 ms Features Detected3542 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3534 ms Pose_Estimation : 8 ms
+Image read : 44 ms Features Detected3533 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3521 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3543 ms Pose_Estimation : 4 ms
+Image read : 48 ms Features Detected3512 ms Pose_Estimation : 0 ms
+Image read : 46 ms Features Detected3555 ms Pose_Estimation : 7 ms
+Image read : 51 ms Features Detected3526 ms Pose_Estimation : 4 ms
+Image read : 49 ms Features Detected3529 ms Pose_Estimation : 6 ms
+Image read : 48 ms Features Detected3525 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3503 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3527 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3505 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3555 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3528 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3544 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3542 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3521 ms Pose_Estimation : 0 ms
+Image read : 42 ms Features Detected3538 ms Pose_Estimation : 7 ms
+Image read : 42 ms Features Detected3526 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3535 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3536 ms Pose_Estimation : 5 ms
+Image read : 42 ms Features Detected3545 ms Pose_Estimation : 2 ms
+Image read : 43 ms Features Detected3523 ms Pose_Estimation : 7 ms
+Image read : 43 ms Features Detected3546 ms Pose_Estimation : 8 ms
+Image read : 45 ms Features Detected3539 ms Pose_Estimation : 6 ms
+Image read : 51 ms Features Detected3509 ms Pose_Estimation : 0 ms
+Image read : 50 ms Features Detected3529 ms Pose_Estimation : 3 ms
+Image read : 49 ms Features Detected3507 ms Pose_Estimation : 4 ms
+Image read : 48 ms Features Detected3507 ms Pose_Estimation : 0 ms
+Image read : 49 ms Features Detected3514 ms Pose_Estimation : 0 ms
+Image read : 48 ms Features Detected3529 ms Pose_Estimation : 1 ms
+Image read : 47 ms Features Detected3537 ms Pose_Estimation : 4 ms
+Image read : 48 ms Features Detected3507 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3516 ms Didnt solve
+Image read : 43 ms Features Detected3522 ms Didnt solve
+Image read : 44 ms Features Detected3547 ms Pose_Estimation : 3 ms
+Image read : 43 ms Features Detected3520 ms Didnt solve
+Image read : 46 ms Features Detected3541 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3520 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3524 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3538 ms Pose_Estimation : 6 ms
+Image read : 43 ms Features Detected3525 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3540 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3522 ms Pose_Estimation : 1 ms
+Image read : 43 ms Features Detected3547 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3541 ms Didnt solve
+Image read : 43 ms Features Detected3533 ms Pose_Estimation : 3 ms
+Image read : 43 ms Features Detected3539 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3526 ms Didnt solve
+Image read : 43 ms Features Detected3527 ms Pose_Estimation : 0 ms
+Image read : 44 ms Features Detected3518 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3560 ms Pose_Estimation : 7 ms
+Image read : 43 ms Features Detected3522 ms Pose_Estimation : 7 ms
+Image read : 43 ms Features Detected3547 ms Pose_Estimation : 5 ms
+Image read : 43 ms Features Detected3543 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3524 ms Didnt solve
+Image read : 43 ms Features Detected3536 ms Pose_Estimation : 4 ms
+Image read : 44 ms Features Detected3533 ms Pose_Estimation : 7 ms
+Image read : 45 ms Features Detected3530 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3498 ms Pose_Estimation : 0 ms
+Image read : 43 ms Features Detected3551 ms Didnt solve
+Image read : 47 ms Features Detected3531 ms Didnt solve
+Image read : 43 ms Features Detected3503 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3516 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3520 ms Didnt solve
+Image read : 43 ms Features Detected3520 ms Pose_Estimation : 2 ms
+Image read : 43 ms Features Detected3529 ms Pose_Estimation : 3 ms
+Image read : 47 ms Features Detected3528 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3523 ms Pose_Estimation : 4 ms
+Image read : 43 ms Features Detected3504 ms Pose_Estimation : 4 ms

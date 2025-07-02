@@ -46,6 +46,7 @@ void eulerToQuaternion(float roll, float pitch, float yaw, std::array<float, 4> 
 }
 
 int main(){
+    auto t0 = std::chrono::high_resolution_clock::now();
     FILE* f = fopen("./simulated-image.raw","rb");
 
     uint32_t width = 3280;
@@ -58,7 +59,12 @@ int main(){
     img.binary.resize(width*height,false) ;
     size_t read = fread(img.data.data(),1,width*height,f);
     fclose(f);
-    printf("Image read in ImageFrame img\n");
+    auto t1 = std::chrono::high_resolution_clock::now();
+    std::ofstream time ("/home/anant/VBN/Performance/time.txt", std::ios::app);
+    time << "Image read : " << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count() << " ms";
+    cout << "Image read in ImageFrame img\n" << "Time taken: "
+         << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count()
+         << " ms" << endl;
     //crop_from_EKF();
 
     FeatureFrame features;
@@ -66,7 +72,10 @@ int main(){
     //features.frame_id =;
     //features.timestamp_us=;
     int THRESHOLD = 120 ;
+    auto t2 = std::chrono::high_resolution_clock::now();
     int detected = detect(img , features, THRESHOLD);
+    auto t3 = std::chrono::high_resolution_clock::now();
+    time << " Features Detected" << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << " ms";
     printf("%d\n",detected);
     float Df ,y_m ,z_m ,focal,D1,D2,tan_Az_m , tan_El_m;
     focal = 2714.286; // focal length
@@ -82,15 +91,22 @@ int main(){
     // for(int i=0;i<detected;i++){
     //     printf("%i : x = %f, y = %f\n",i+1,features.points[i].y,features.points[i].z);
     // }
-    if (detected == 5) five_led(&features,Df,focal, y_m, z_m ,tan_Az_m, tan_El_m, pose);
-    //else if (detected == 3) three_led(&features,D1, D2 , focal, y_m, z_m ,tan_Az_m , tan_El_m, pose);
+
+    if (detected == 5) {
+        auto t4 = std::chrono::high_resolution_clock::now();
+        five_led(&features,Df,focal, y_m, z_m ,tan_Az_m, tan_El_m, pose);
+        auto t5 = std::chrono::high_resolution_clock::now();
+        time << " Pose_Estimation : " << std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4).count() << " ms\n";
+    }
+        //else if (detected == 3) three_led(&features,D1, D2 , focal, y_m, z_m ,tan_Az_m , tan_El_m, pose);
     else {
-        std::ofstream out("/home/anant/VBN/Performance/close_range_5led.csv", std::ios::app);
-        if (!out) {
-            std::cerr << "Could not open close_range_5led.csv\n";
-        }
-        out << "number of leds were detected: " << detected << endl <<endl;
-        out.close();
+        // std::ofstream out("/home/anant/VBN/Performance/close_range_5led.csv", std::ios::app);
+        // if (!out) {
+        //     std::cerr << "Could not open close_range_5led.csv\n";
+        // }
+        // out << "number of leds were detected: " << detected << endl <<endl;
+        // out.close();
+        time << " Didnt solve\n";
         return 0 ;
     }
     for(int i=0;i<6;i++){
