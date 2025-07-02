@@ -1,0 +1,11 @@
+from PIL import Image
+import numpy as np
+
+# Load PNG image
+img = Image.open('png_images/projected_markers.png')
+img_array = np.array(img)
+
+# Save as true raw binary
+with open('raw_images/simulated-image_3.raw', 'wb') as f:
+    f.write(img_array.tobytes())
+print (img_array.shape)
