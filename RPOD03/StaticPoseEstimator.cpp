@@ -75,12 +75,6 @@ void three_led(FeatureFrame *camframe, float D1 ,float D2, float f, float y_m, f
 
 void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m ,float tan_Az_m,float tan_El_m, PoseResult& pose) {
 
-    // Initializing LEDS vectors in target frame with scaling
-    // float x_1_nt[3] = { 0.0f, Df, 0.0f };
-    // float x_2_nt[3] = { 0.0f, 0.0f, Df };
-    // float x_3_nt[3] = { 0.0f, -Df, 0.0f };
-    // float x_4_nt[3] = { 0.0f, 0.0f, -Df };
-    // float x_5_nt[3] = { -Df, 0.0f, 0.0f };
     
     // Initializing LEDS vectors in chaser frame with scaling
     float s1 = 1.0f;
