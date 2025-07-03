@@ -11,6 +11,28 @@ typedef struct {
 
 // Global variables (minimize these for better practice)
 
+void sort(FeatureFrame* leds) {
+    if (!leds || leds->points.size() <= 1) {
+        return;
+    }   
+    size_t n = leds->points.size();
+    for (size_t i = 0; i < n - 1; i++) {
+        size_t max_idx = i;        
+        // Find the maximum element in remaining array
+        for (size_t j = i + 1; j < n; j++) {
+            if (leds->points[j].size > leds->points[max_idx].size) {
+                max_idx = j;
+            }
+        }       
+        // Swap if needed
+        if (max_idx != i) {
+            FeaturePoint2D temp = leds->points[i];
+            leds->points[i] = leds->points[max_idx];
+            leds->points[max_idx] = temp;
+        }
+    }
+}
+
 float dist(const FeaturePoint2D& p1, const FeaturePoint2D& p2) {
     float dx = p1.y - p2.y;
     float dy = p1.z - p2.z;
@@ -18,10 +40,6 @@ float dist(const FeaturePoint2D& p1, const FeaturePoint2D& p2) {
 }
 
 void best_comb_three(FeatureFrame* leds){
-
-}
-
-void best_comb_five(FeatureFrame* leds){
 
 }
 
@@ -168,6 +186,7 @@ void process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
             leds->points.emplace_back();
             leds->points[i].y = cx - width / 2.0f;
             leds->points[i].z = cy - height / 2.0f;
+            leds->points[i].size = M[0]; // Default size, can be adjusted later
             
         }
     }
@@ -183,6 +202,9 @@ void exchange(int idx , int n , FeatureFrame* leds){
     tmp = leds->points[idx].z ;
     leds->points[idx].z =  leds->points[n].z;
     leds->points[n].z = tmp ;
+    tmp = leds->points[idx].size;
+    leds->points[idx].size =  leds->points[n].size;
+    leds->points[n].size = tmp;
 }
 
 /**
@@ -282,21 +304,76 @@ void arrange_5(FeatureFrame* leds){
 
 }
 
-void extract_leds(FeatureFrame* leds){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
+void best_comb_five(FeatureFrame* leds){
+    cout << "best_comb_five called" << endl;
+    int central = -1;
+    int side_leds[4] = {-1, -1, -1, -1}; // Initialize side LEDs to -1
+    int n = leds->points.size();
+    float distances[n][n] = {0};
+    for(int i=0;i<n;i++){
+        for(int j=0;j<n;j++){
+            if(i==j) continue;
+            distances[i][j] = dist(leds->points[i], leds->points[j]);
+        }
+        for (int j=0;j<n;j++){
+            int min =j;
+            for(int k=j+1;k<n;k++){
+                if (distances[i][k] < distances[i][min]){
+                    int tmp = distances[i][k];
+                    distances[i][k] = distances[i][min];
+                    distances[i][min] = tmp;
+                    min = k;
+                }
+            }
+        }
+    }
+    // Now we have distances[i][j] sorted for each i
+    //check central
+
+    for (int j=0,i=0 ; i<n ; i++){
+        int a = distances[i][1]/distances[i][0];
+        int b = distances[i][2]/distances[i][1];
+        int c = distances[i][3]/distances[i][2];
+        int d = distances[i][4]/distances[i][3];
+        if (a< 1.2 && b < 1.2 && c < 1.2 && d < 1.2 && central == -1) {
+            // Found a valid combination
+            central = i;
+        }
+        if (1.3 < a && a < 1.6 && 1.3 < b && b < 1.6 && 1.3 < c && c < 1.6 && 1.3 < d && d < 1.6) {
+            // Found a valid combination
+            side_leds[j] = i;
+            j++;
+        }
+        if (central != -1 && j == 4) {
+            // We have found a valid central and side LEDs
+            break;
+        }
+    }
+    exchange(4, central, leds); // Move central LED to position 0
+    // Now we have central LED at position 0 and side LEDs in side_leds
+    for (int i = 0; i < 4; i++) {
+        if (side_leds[i] != -1) {
+            exchange(i, side_leds[i], leds); // Move side LEDs to
+        }
+    }
+    
+}
+
+
+void extract_leds(FeatureFrame* leds, int mode){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
     mergeCloseLEDs(leds, 8);
-    if(leds->points.size()==5){
+    if(mode==5){
+        best_comb_five(leds);
         arrange_5(leds); 
         return;
     }
-    if(leds->points.size()==3){
+    if(mode==3){
         arrange_3(leds); 
         return;
     }
-    else best_comb_five(leds);
-    arrange_5(leds);
 }
 
-int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
+int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD,int mode) {
     // Your core logic here — NO OpenCV, NO hardware specifics
     // Work on input.data, input.width, etc.
     // Only implement if there exists some platform-independent logic 
@@ -307,7 +384,7 @@ int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
     for(int i=0;i<leds->points.size();i++){
         printf("%i : x = %f, y = %f\n",i+1,features.points[i].y,features.points[i].z);
     }
-    extract_leds(leds);
+    extract_leds(leds,mode);
     printf("\n%zu\n",leds->points.size());
     return leds->points.size();
      /* For example:

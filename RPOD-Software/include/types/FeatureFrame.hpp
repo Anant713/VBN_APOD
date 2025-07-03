@@ -9,8 +9,9 @@
 struct FeaturePoint2D {
     float y;  ///< Pixel x-coordinate
     float z;  ///< Pixel y-coordinate
-    FeaturePoint2D () : y(0.0f) , z(0.0f) {};
-    FeaturePoint2D (float y_coord ,float z_coord) : y(y_coord) , z(z_coord) {printf("not default ran");};
+    float size;
+    FeaturePoint2D () : y(0.0f) , z(0.0f), size(0.0f) {};
+    FeaturePoint2D (float y_coord ,float z_coord) : y(y_coord) , z(z_coord) , size(0.0f) {printf("not default ran");};
 
 };
 

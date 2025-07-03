@@ -31,7 +31,7 @@ image[:] = background_color
 markers_3D = np.array([
     [-55, 0, 0],    # Marker 1 (3m in front)
     [0, 55, 0],  # Marker 2 (right)
-    [0, 0, -20],  # Marker 3 (up)
+    [0, 0, -15],  # Marker 3 (up)
     # [50, 0, 30],
     # [-50,0,30]
 ], dtype=np.float32)
@@ -51,14 +51,14 @@ camera_matrix = np.array([
 
 # Define camera rotation (Euler angles: pitch, yaw, roll in degrees)
 xdeg = 0
-ydeg = 0
+ydeg = 30
 zdeg = 0
 theta_x, theta_y, theta_z = np.radians([xdeg, ydeg,zdeg])  # Rotation in X, Y, Z (in degrees)
 #rotation_vector, _ = cv2.Rodrigues(np.array([theta_x, theta_y, theta_z]))  # Convert to rotation vector
 rotation_vector = euler_to_rvec(xdeg, ydeg,zdeg)
 print(rotation_vector)
 # Define camera translation (moving camera in mm)
-translation_vector = np.array([[0], [0], [1000]], dtype=np.float32)  # Shift right & down
+translation_vector = np.array([[0], [0], [3000]], dtype=np.float32)  # Shift right & down
 
 # No distortion
 dist_coeffs = np.zeros((4, 1), dtype=np.float32)
