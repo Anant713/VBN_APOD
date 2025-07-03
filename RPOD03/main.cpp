@@ -66,7 +66,8 @@ int main(){
     //features.frame_id =;
     //features.timestamp_us=;
     int THRESHOLD = 110 ;
-    int detected = detect(img , features, THRESHOLD);
+    int mode = 5;
+    int detected = detect(img , features, THRESHOLD, mode);
     printf("%d\n",detected);
     float Df ,y_m ,z_m ,focal,D1,D2,tan_Az_m , tan_El_m;
     focal = 2714.286; // focal length

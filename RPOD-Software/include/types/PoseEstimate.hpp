@@ -27,5 +27,5 @@ struct PoseResult{
     float data[6];
     float s_ntnc_nc[3] ;
 } ;
-void five_led(FeatureFrame *camframe, float Df, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
+void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
 void three_led(FeatureFrame *camframe, float D1 ,float D2, float focal, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);

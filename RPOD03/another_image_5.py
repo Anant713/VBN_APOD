@@ -52,15 +52,15 @@ camera_matrix = np.array([
 ], dtype=np.float32)
 
 # Define camera rotation (Euler angles: pitch, yaw, roll in degrees)
-xdeg = 20
-ydeg = 15
-zdeg = 10
+xdeg = 6
+ydeg = 9
+zdeg = 0
 theta_x, theta_y, theta_z = np.radians([xdeg, ydeg,zdeg])  # Rotation in X, Y, Z (in degrees)
 #rotation_vector, _ = cv2.Rodrigues(np.array([theta_x, theta_y, theta_z]))  # Convert to rotation vector
 rotation_vector = euler_to_rvec(xdeg, ydeg,zdeg)
 print(rotation_vector)
 # Define camera translation (moving camera in mm)
-translation_vector = np.array([[0], [0], [500]], dtype=np.float32)  # Shift right & down
+translation_vector = np.array([[3], [5], [300]], dtype=np.float32)  # Shift right & down
 
 # No distortion
 dist_coeffs = np.zeros((4, 1), dtype=np.float32)
@@ -75,7 +75,7 @@ for point in image_points:
         cv2.circle(image, (x, y), 7, 255, -1)  # Draw filled white spots
 
 # Apply Gaussian blur to spread intensities
-image = cv2.GaussianBlur(image, (11, 11), 5)  # Adjust blur size & sigma
+image = cv2.GaussianBlur(image, (11, 11), 10)  # Adjust blur size & sigma
 
 # Normalize & convert to 8-bit
 image = image.clip(0, 255).astype(np.uint8)

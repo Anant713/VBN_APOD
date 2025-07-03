@@ -47,20 +47,21 @@ struct ImageFrame {
 struct FeaturePoint2D {
     float y;  ///< Pixel x-coordinate
     float z;  ///< Pixel y-coordinate
-    FeaturePoint2D () : y(0.0f) , z(0.0f) {};
-    FeaturePoint2D (float y_coord ,float z_coord) : y(y_coord) , z(z_coord) {printf("not default ran");};
+    float size;
+    FeaturePoint2D () : y(0.0f) , z(0.0f), size(0.0f) {};
+    FeaturePoint2D (float y_coord ,float z_coord) : y(y_coord) , z(z_coord) , size(0.0f) {printf("not default ran");};
 };
 
 /// \brief Represents a set of detected 2D features in an image.
 struct FeatureFrame {
-    std::vector<FeaturePoint2D> points; ///< List of 2D points
+    std::vector<FeaturePoint2D> points; ///< List of 2D points         
     uint64_t timestamp_us = 0;          ///< Timestamp in microseconds
     uint32_t frame_id = 0;              ///< Optional sequential frame ID
 };
 
 void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
 void three_led(FeatureFrame *camframe, float D1 ,float D2, float focal, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose);
-int detect(ImageFrame& img, FeatureFrame& features, int THRESHOLD);
+int detect(ImageFrame& img, FeatureFrame& features, int THRESHOLD, int mode);
 void best_comb_five(FeatureFrame* leds);
 void best_comb_three(FeatureFrame* leds);
 void arrange(FeatureFrame* leds);
