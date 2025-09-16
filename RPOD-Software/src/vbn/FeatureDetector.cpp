@@ -112,12 +112,13 @@ int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contour
                                 stack_size++;
                                 contours[contour_count].points_x.push_back(nx);
                                 contours[contour_count].points_y.push_back(ny);
-                                contours[contour_count].num_points++;                                
+                                contours[contour_count].num_points++; 
+                                                            
                             }
                         }
                     }
                 }
-                if(contours[contour_count].num_points <= 80){
+                if(contours[contour_count].num_points <= 150){
                     printf("waste contour = %d",contours[contour_count].num_points );
                     contours.pop_back(); // Remove small contours
                 }
@@ -290,7 +291,7 @@ void arrange_5(FeatureFrame* leds){
     }
     exchange (0,maxy,leds);
     for(int i=1;i<5;i++){
-        if (leds->points[maxz].z <leds->points[i].z) maxz = i;
+        if (leds->points[maxz].z < leds->points[i].z) maxz = i;
     }
     exchange (1,maxz,leds);
     for(int i=2;i<5;i++){
@@ -360,7 +361,7 @@ void best_comb_five(FeatureFrame* leds){
 
 
 void extract_leds(FeatureFrame* leds, int mode){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
-    mergeCloseLEDs(leds, 8);
+    mergeCloseLEDs(leds, 5);
     if(mode==5){
         best_comb_five(leds);
         arrange_5(leds); 

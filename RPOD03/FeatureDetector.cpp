@@ -1,7 +1,8 @@
 //#include "../../include/vbn/FeatureDetector.hpp"
 #include "Structs.hpp"
 using std::vector ;
-
+#include <fstream>
+#include <iostream>
 // Structure to maintain a contour
 typedef struct {
     vector<int> points_x;
@@ -46,98 +47,67 @@ void best_comb_three(FeatureFrame* leds){
 void threshold(ImageFrame& img,int SIZE,int THRESHOLD){
     int count=0;
     for (size_t i=0 ; i < SIZE; i++) {
-        if (img.data[i] < (THRESHOLD)){
-            img.binary[i] = 0;
+        if (img.data[i] < THRESHOLD){
+            img.data[i] = 0;
+            continue;
         } 
-        else {
-            img.binary[i]=1;
-            count++;
-        }
+        count++;
     }
     printf("count = %d",count);
 }
 
-int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contours) {
-
+int find_contours(ImageFrame& img, int width, int height, vector<Contour>& contours) {
     int contour_count = 0;
-    vector<bool>visited (width * height, false); // Using vector for dynamic size and initialization
+    vector<uint8_t> visited(width * height, 0);  // avoid vector<bool>
 
-    // Direction offsets for 8-connected neighbors
     int dx[8] = {-1, 0, 1, 1, 1, 0, -1, -1};
     int dy[8] = {-1, -1, -1, 0, 1, 1, 1, 0};
     
-    // Single scan through the image
-    for (int y = 10; y < height - 11; y=y+10) {
-        for (int x = 10; x < width - 11; x=x+10) {
+    for (int y = 1; y < height - 1; y++) {
+        for (int x = 1; x < width - 1; x++) {
             int idx = y * width + x;
-            // If pixel is white and not visited
-            if (img.binary[idx] == 1 && !visited[idx]) {  // Found a new contour
+            if (img.data[idx] != 0 && !visited[idx]) {
+                contours.emplace_back();
+                contours.back().num_points = 0;  // important
 
-                // contours[contour_count].allocated_size = CONTOUR_BUFFER_SIZE;
-                contours.emplace_back();//as push_back needs an argument to compile
-                // Trace the contour using flood fill
-                vector<int> stack_x;
-                vector<int> stack_y;
-                int stack_size = 0;
-                
+                vector<int> stack_x, stack_y;
                 stack_x.push_back(x);
                 stack_y.push_back(y);
-                stack_size++;
-                
-                while (stack_size > 0) {
-                    stack_size--;
-                    int cx = stack_x[stack_size];
-                    int cy = stack_y[stack_size];
+
+                while (!stack_x.empty()) {
+                    int cx = stack_x.back(); stack_x.pop_back();
+                    int cy = stack_y.back(); stack_y.pop_back();
                     int cidx = cy * width + cx;
-                    
+
                     if (visited[cidx]) continue;
                     visited[cidx] = 1;
-                    
-                    // Add to contour if there's space
-                    contours[contour_count].points_x.push_back(cx);
-                    contours[contour_count].points_y.push_back(cy);
-                    contours[contour_count].num_points++;
 
-                    
-                    // Check all 8 neighbors
+                    contours.back().points_x.push_back(cx);
+                    contours.back().points_y.push_back(cy);
+                    contours.back().num_points++;
+
                     for (int d = 0; d < 8; d++) {
                         int nx = cx + dx[d];
                         int ny = cy + dy[d];
-                        
                         if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
                             int nidx = ny * width + nx;
-                            if (img.binary[nidx] == 1 && !visited[nidx]){
+                            if (img.data[nidx] != 0 && !visited[nidx]) {
                                 stack_x.push_back(nx);
                                 stack_y.push_back(ny);
-                                stack_size++;
-                                contours[contour_count].points_x.push_back(nx);
-                                contours[contour_count].points_y.push_back(ny);
-                                contours[contour_count].num_points++;                                
                             }
                         }
                     }
                 }
-                if(contours[contour_count].num_points <= 80){
-                    printf("waste contour = %d",contours[contour_count].num_points );
-                    contours.pop_back(); // Remove small contours
-                }
-                
-                else{
-                    printf("%d : %d\n",contour_count,contours[contour_count].num_points);
+
+                if (contours.back().num_points <= 200) {
+                    contours.pop_back();
+                } else {
                     contour_count++;
-                    //printf("%zu",contours.size());
-                    //if(contours.size()>500) return contour_count ;                   
-                }                
-                //printf("%d",contour_count);
-                //fflush(stdout);
+                }
             }
-            
         }
     }
-    
-    printf("in find_contours %zu", contours.size());
-    //printf("in find_contours %d", contour_count);
-
+    cout << "contour number - " << contour_count << endl;
     return contour_count;
 }
 
@@ -146,15 +116,27 @@ void calculate_moments(Contour *contour, float *moments , ImageFrame& img) {// C
     for (int i = 0; i < 3; i++) {
         moments[i] = 0.0;
     }
-    moments[0] = contour->num_points;
+    float bright_denom = 0;
+    
+    for(int i = 0; i < contour->num_points; i++){
+        int x = contour->points_x[i];
+        int y = contour->points_y[i];
+        bright_denom = img.data[y * img.width + x] + bright_denom;
+    }
     // Calculate spatial moments
     for (int i = 0; i < contour->num_points; i++) {
-        // M10, M01 - first order moments   
-        float brightness = (img.data[contour->points_y[i]*img.width + contour->points_x[i]])/255.0 ;     
-        moments[1] += contour->points_x[i] ;//* brightness;
-        moments[2] += contour->points_y[i] ;//* brightness;
-        
+        int x = contour->points_x[i];
+        int y = contour->points_y[i];
+        // M00 - area
+        moments[0] += 1.0;
+        float brightness = img.data[y * img.width + x];
+        // M10, M01 - first order moments
+        moments[1] += x*brightness;
+        moments[2] += y*brightness;
     }
+    moments[1] /= bright_denom ;
+    moments[2] /= bright_denom ;
+    cout << "moments- "<<moments[1]<<","<<moments[2]<<endl;
 }
 
 void process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
@@ -171,25 +153,31 @@ void process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
     // Find contours in the thresholded image
     int num_contours = find_contours(img, width, height, contours);
     printf("\n%d num_contours\n%zu contours.size()\n",num_contours, contours.size());
+    {
+    std::ofstream blob("/home/anant/VBN/RPOD03/blobs.txt", std::ios::trunc);
+    blob.close();
+    }
+    std::ofstream blob("/home/anant/VBN/RPOD03/blobs.txt",std::ios::app);
     for (int i = 0; i < num_contours; i++) { 
         // Calculate moments
         float M[3] = {0}; // M00, M01, M10, M11, M20, M02, etc.
         calculate_moments(&contours[i], M,img);
         if (M[0] > 0) { // M[0] is M00
             // Calculate center of mass
-            double cx = M[1] / M[0]; // M10/M00
-            double cy = M[2] / M[0]; // M01/M00
+            double cx = M[1] ;/// M[0]; // M10/M00
+            double cy = M[2] ;/// M[0]; // M01/M00
   
             // Add to star list
             //printf("%f %f \n",cx-width/2.0f,cy-height/2.0f);
             //leds->points.emplace_back(cy - height / 2.0f,cx - width / 2.0f);
             leds->points.emplace_back();
-            leds->points[i].y = cx - width / 2.0f;
-            leds->points[i].z = cy - height / 2.0f;
+            leds->points[i].y = cx - (width / 2.0f);
+            leds->points[i].z = cy - (height / 2.0f);
             leds->points[i].size = M[0]; // Default size, can be adjusted later
-            
+            blob << cx - (width / 2.0f)<<","<<cy - (height / 2.0f)<<","<< static_cast<int>(img.data[(int)cy*img.width+(int)cx])<< endl ;       
         }
     }
+    blob.close();
     contours.clear();
     
 }
@@ -379,13 +367,14 @@ int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD,int mode) {
     // Only implement if there exists some platform-independent logic 
     // otherwise better to implement in platrform-specific code
     FeatureFrame* leds  = &features;
-    uint8_t *img_grey = img.data.data() ;
+    //uint8_t *img_grey = img.data.data() ;
     process_image(img,leds,THRESHOLD);
     for(int i=0;i<leds->points.size();i++){
         printf("%i : x = %f, y = %f\n",i+1,features.points[i].y,features.points[i].z);
     }
     extract_leds(leds,mode);
     printf("\n%zu\n",leds->points.size());
+
     return leds->points.size();
      /* For example:
         Filtering out low-response keypoints

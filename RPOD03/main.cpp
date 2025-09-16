@@ -46,18 +46,37 @@ void eulerToQuaternion(float roll, float pitch, float yaw, std::array<float, 4> 
 }
 
 int main(){
-    FILE* f = fopen("./simulated-image.raw","rb");
+    FILE* f = fopen("/home/anant/VBN/images/image_23_100um_sun.raw","rb");
 
-    uint32_t width = 3280;
-    uint32_t height = 2464;
+    float Df ,y_m ,z_m ,focal,D1,D2,tan_Az_m , tan_El_m;
+
+    // Rpi V2
+    // uint32_t width = 3280;
+    // uint32_t height = 2464;
+    // focal = 2714.286; // focal length
+    // Df = 10 * focal ; // dstance between centre and 4 leds of central 5 led pattern multiplied with focal length
+    // y_m = 1640; // V2 Half of image sensor length in mm in y direction
+    // z_m = 1232; // V2 Half of image sensor length in mm in z direction
+
+    // OV9281
+    uint32_t width = 800;
+    uint32_t height = 800;
+    focal = ; // focal length
+    y_m = ; // V2 Half of image sensor length in mm in y direction
+    z_m = ; // V2 Half of image sensor length in mm in z direction
 
     ImageFrame img;
     img.width = width ;
     img.height = height ;
     img.data.resize(width*height,0)  ;
-    img.binary.resize(width*height,false) ;
     size_t read = fread(img.data.data(),1,width*height,f);
+    cout << "read - " <<read << endl;
+    cout << "size - " <<img.data.size()<< endl;
+
     fclose(f);
+    // for ( int i=0 ; i<50 ; i++){
+    //     cout <<static_cast<int>(img.data[i])<<endl;
+    // }
     printf("Image read in ImageFrame img\n");
     //crop_from_EKF();
 
@@ -65,15 +84,13 @@ int main(){
     printf("Resized features.points\n");
     //features.frame_id =;
     //features.timestamp_us=;
-    int THRESHOLD = 110 ;
+    //3896 x 2453 µm
+    int THRESHOLD = 15 ;
     int mode = 5;
     int detected = detect(img , features, THRESHOLD, mode);
     printf("%d\n",detected);
-    float Df ,y_m ,z_m ,focal,D1,D2,tan_Az_m , tan_El_m;
-    focal = 2714.286; // focal length
+
     Df = 10 * focal ; // dstance between centre and 4 leds of central 5 led pattern multiplied with focal length
-    y_m = 1640; // Half of image sensor length in mm in y direction
-    z_m = 1232; // Half of image sensor length in mm in z direction
     D1 = 55; //Distance of central LED from outers LEDS' 
     D2 = 20; //Distance of central LED from outers LEDS' plane parallel to surface of cubesat
     tan_Az_m = y_m/focal;

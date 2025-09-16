@@ -140,13 +140,13 @@ void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m
     
     // Calculate angles using atan2
     a = atan2f(-x_r1[2], x_r2[2]);
-    float cos_a = cosf(a);
+    float cos_a =  cosf(a);
     float sin_a = sinf(a);
     
     // Calculate c and b (assuming D and f are defined somewhere)
-    c = asinf((-x_r5[1] / x_r4[2]) * cos_a) - Az;
-    printf("\n sinf(b+El)=%f",(cosf(c + Az) * cos_a) / (sinf(c + Az) * sin_a + (x_r3[1] / x_r5[2])));
-    b = asinf((cosf(c + Az) * cos_a) / (sinf(c + Az) * sin_a + (x_r3[1] / x_r5[2]))) - El;
+    c = asinf((-(x_r5[1]/2) / x_r4[2]) * cos_a) - Az;
+    printf("\n sinf(b+El)=%f",(cosf(c + Az) * cos_a) / (sinf(c + Az) * sin_a + (x_r3[1] / (x_r5[2]/2))));
+    b = asinf((cosf(c + Az) * cos_a) / (sinf(c + Az) * sin_a + (x_r3[1] / (x_r5[2]/2)))) - El;
     
     // float R = (D * f / x_r1[1]) * (cos_a * cosf(c + Az) - sin_a * sinf(c + Az) * sinf(b + El));
     float R = (Df / x_r1[1]) * (cos_a * cosf(c + Az) - sin_a * sinf(c + Az) * sinf(b + El));

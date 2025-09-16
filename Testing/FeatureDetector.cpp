@@ -22,7 +22,7 @@ void best_comb_five(FeatureFrame* leds){
 void threshold(ImageFrame& img,int SIZE,int THRESHOLD){
     int count=0;
     for (size_t i=0 ; i < SIZE; i++) {
-        if (img.data[i] < (THRESHOLD)){
+        if (img.data[i] < THRESHOLD){
             img.binary[i] = 0;
         } 
         else {
@@ -93,8 +93,8 @@ int find_contours(ImageFrame& img, int width, int height,vector<Contour>&contour
                         }
                     }
                 }
-                if(contours[contour_count].num_points <= 60){
-                    printf("waste contour = %d\n",contours[contour_count].num_points );
+                if(contours[contour_count].num_points <= 5){
+                    printf("Less than 3 ran\n");
                     contours.pop_back(); // Remove small contours
                 }
                 
@@ -133,7 +133,7 @@ void calculate_moments(Contour *contour, float *moments , ImageFrame& img) {// C
     }
 }
 
-int process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
+void process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
     // Reset star count
     int width = img.width;
     int height = img.height;
@@ -147,7 +147,6 @@ int process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
     // Find contours in the thresholded image
     int num_contours = find_contours(img, width, height, contours);
     printf("\n%d num_contours\n%zu contours.size()\n",num_contours, contours.size());
-    if (num_contours <=2) return num_contours;
     for (int i = 0; i < num_contours; i++) { 
         // Calculate moments
         float M[3] = {0}; // M00, M01, M10, M11, M20, M02, etc.
@@ -167,7 +166,7 @@ int process_image(ImageFrame& img,FeatureFrame* leds, int THRESHOLD) {
         }
     }
     contours.clear();
-    return num_contours;
+    
 }
 
 void exchange(int idx , int n , FeatureFrame* leds){
@@ -179,57 +178,6 @@ void exchange(int idx , int n , FeatureFrame* leds){
     leds->points[idx].z =  leds->points[n].z;
     leds->points[n].z = tmp ;
 }
-
-/**
- * Merge any two points in `leds->points` that are closer than `threshold`,
- * replacing each close‑pair with their average.  
- * Operates in O(n²), which is fine for small numbers of LEDs.
- *
- * @param leds        Pointer to your FeatureFrame containing points[]
- * @param threshold   Maximum distance (in pixels) below which two points
- *                    are considered the same.
- */
-void mergeCloseLEDs(FeatureFrame* leds, float threshold){
-    if (!leds) return;
-    const float thresh2 = threshold * threshold;
-    const auto& pts = leds->points;
-    size_t n = pts.size();
-    std::vector<bool> used(n, false);
-    std::vector<FeaturePoint2D> merged;
-    merged.reserve(n);
-
-    for (size_t i = 0; i < n; ++i) {
-        if (used[i]) 
-            continue;
-
-        // start a new cluster with pts[i]
-        float sumX = pts[i].y;
-        float sumY = pts[i].z;
-        int   count = 1;
-        used[i] = true;
-
-        // find all other points within threshold
-        for (size_t j = i + 1; j < n; ++j) {
-            if (used[j]) 
-                continue;
-            float dx = pts[j].y - pts[i].y;
-            float dy = pts[j].z - pts[i].z;
-            if (dx*dx + dy*dy <= thresh2) {
-                sumX += pts[j].y;
-                sumY += pts[j].z;
-                ++count;
-                used[j] = true;
-            }
-        }
-
-        // average the cluster
-        merged.emplace_back(sumX / count, sumY / count);
-    }
-
-    // Replace original points with the merged set
-    leds->points = std::move(merged);
-}
-
 
 void arrange(FeatureFrame* leds){
     int maxy=0,maxz=1,miny=2,minz =3;
@@ -253,10 +201,7 @@ void arrange(FeatureFrame* leds){
 }
 
 void extract_leds(FeatureFrame* leds){//If number of detected contours > no.of LEDs, then find combination of blobs with best possible chance of being leds
-    mergeCloseLEDs(leds, 7);
-    if(leds->points.size()==5){
-        arrange(leds); 
-        return;}
+    if(leds->points.size()==5)arrange(leds);
     else best_comb_five(leds);
     arrange(leds);
 }
@@ -268,11 +213,7 @@ int detect( ImageFrame& img, FeatureFrame& features, int THRESHOLD) {
     // otherwise better to implement in platrform-specific code
     FeatureFrame* leds  = &features;
     uint8_t *img_grey = img.data.data() ;
-    int num_contours = process_image(img,leds,THRESHOLD);
-    if (num_contours <= 2) return num_contours;
-    for(int i=0;i<leds->points.size();i++){
-        printf("%i : x = %f, y = %f\n",i+1,features.points[i].y,features.points[i].z);
-    }
+    process_image(img,leds,THRESHOLD);
     extract_leds(leds);
     printf("\n%zu\n",leds->points.size());
     return leds->points.size();

@@ -1,5 +1,5 @@
 import another_image
-import plot_error
+# import plot_error
 import pandas as pd
 import subprocess
 import numpy as np

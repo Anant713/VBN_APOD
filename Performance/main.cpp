@@ -60,8 +60,8 @@ int main(){
     size_t read = fread(img.data.data(),1,width*height,f);
     fclose(f);
     auto t1 = std::chrono::high_resolution_clock::now();
-    std::ofstream time ("/home/anant/VBN/Performance/time.txt", std::ios::app);
-    time << "Image read : " << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count() << " ms";
+    // std::ofstream time ("/home/anant/VBN/Performance/time.txt", std::ios::app);
+    // time << "Image read : " << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count() << " ms";
     cout << "Image read in ImageFrame img\n" << "Time taken: "
          << std::chrono::duration_cast<std::chrono::milliseconds>(t1 - t0).count()
          << " ms" << endl;
@@ -75,7 +75,7 @@ int main(){
     auto t2 = std::chrono::high_resolution_clock::now();
     int detected = detect(img , features, THRESHOLD);
     auto t3 = std::chrono::high_resolution_clock::now();
-    time << " Features Detected" << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << " ms";
+    // time << " Features Detected" << std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2).count() << " ms";
     printf("%d\n",detected);
     float Df ,y_m ,z_m ,focal,D1,D2,tan_Az_m , tan_El_m;
     focal = 2714.286; // focal length
@@ -96,7 +96,7 @@ int main(){
         auto t4 = std::chrono::high_resolution_clock::now();
         five_led(&features,Df,focal, y_m, z_m ,tan_Az_m, tan_El_m, pose);
         auto t5 = std::chrono::high_resolution_clock::now();
-        time << " Pose_Estimation : " << std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4).count() << " ms\n";
+        // time << " Pose_Estimation : " << std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4).count() << " ms\n";
     }
         //else if (detected == 3) three_led(&features,D1, D2 , focal, y_m, z_m ,tan_Az_m , tan_El_m, pose);
     else {
@@ -106,7 +106,7 @@ int main(){
         // }
         // out << "number of leds were detected: " << detected << endl <<endl;
         // out.close();
-        time << " Didnt solve\n";
+        // time << " Didnt solve\n";
         return 0 ;
     }
     for(int i=0;i<6;i++){
