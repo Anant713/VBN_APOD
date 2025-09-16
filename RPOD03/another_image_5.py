@@ -52,15 +52,15 @@ camera_matrix = np.array([
 ], dtype=np.float32)
 
 # Define camera rotation (Euler angles: pitch, yaw, roll in degrees)
-xdeg = 6
-ydeg = 9
-zdeg = 0
+xdeg = 0
+ydeg = 0
+zdeg = 30
 theta_x, theta_y, theta_z = np.radians([xdeg, ydeg,zdeg])  # Rotation in X, Y, Z (in degrees)
 #rotation_vector, _ = cv2.Rodrigues(np.array([theta_x, theta_y, theta_z]))  # Convert to rotation vector
 rotation_vector = euler_to_rvec(xdeg, ydeg,zdeg)
 print(rotation_vector)
 # Define camera translation (moving camera in mm)
-translation_vector = np.array([[3], [5], [300]], dtype=np.float32)  # Shift right & down
+translation_vector = np.array([[30], [5], [200]], dtype=np.float32)  # Shift right & down
 
 # No distortion
 dist_coeffs = np.zeros((4, 1), dtype=np.float32)

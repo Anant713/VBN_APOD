@@ -73,7 +73,7 @@ def make_image(xdeg,ydeg,zdeg,x,y,z) :
             cv2.circle(image, (x, y), 7, 255, -1)  # Draw filled white spots
 
     # Apply Gaussian blur to spread intensities
-    image = cv2.GaussianBlur(image, (11, 11), 8)  # Adjust blur size & sigma
+    image = cv2.GaussianBlur(image, (11, 11), 5)  # Adjust blur size & sigma
 
     # Normalize & convert to 8-bit
     image = image.clip(0, 255).astype(np.uint8)

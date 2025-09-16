@@ -1,7 +1,7 @@
 //#include "../../include/vbn/FeatureDetector.hpp"
 #include <math.h>
 #include "Structs.hpp"
-#include <fstream>
+
 void three_led(FeatureFrame *camframe, float D1 ,float D2, float f, float y_m, float z_m ,float Az_m,float El_m, PoseResult& pose){
     // Initializing LEDS vectors in target frame with scaling
     float x_1_nt[3] = { 0.0f, -D1, 0.0f };
@@ -159,12 +159,6 @@ void five_led(FeatureFrame *camframe, float Df,float focal, float y_m, float z_m
     pose.s_ntnc_nc[0] = R*cos_Az*cos_El;
     pose.s_ntnc_nc[1] = R*sin_Az*cos_El;
     pose.s_ntnc_nc[2] = -R * sin_El;
-    std::ofstream out("/home/anant/VBN/Performance/result.csv", std::ios::app);
-    if (!out) {
-        std::cerr << "Could not open result.csv\n";
-    }
-    out <<pose.data[0]*180/M_PI<<","<<pose.data[1]*180/M_PI<<","<<pose.data[2]*180/M_PI<<","<<pose.s_ntnc_nc[1]<<","<<pose.s_ntnc_nc[2]<<","<<pose.s_ntnc_nc[0] <<endl<<endl;
-    out.close();
-
+    
     return;
 }
