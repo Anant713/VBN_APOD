@@ -1,8 +1,10 @@
-*.pdf
+**/*.pdf
 *.png
 .vscode
-*.pyc
+**/*.pyc
 __pycache__
-*.xlsx#
-*.xlsx
-*.json
+**/*.xlsx#
+**/*.xlsx
+**/*.json
+**/*.yuv
+**/*.raw
